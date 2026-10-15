@@ -218,3 +218,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+venv/
+*.db
+instance/
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+.env

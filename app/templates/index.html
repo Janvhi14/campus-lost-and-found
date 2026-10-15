@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded shadow-sm text-center">
+  <h1 class="display-6">Campus Lost &amp; Found Portal</h1>
+  <p class="lead">Report lost or found items and let image matching find the owner.</p>
+  {% if not current_user.is_authenticated %}
+    <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Get started</a>
+  {% endif %}
+</div>
+{% endblock %}
