@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Report {{ kind|capitalize }} Item{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4 class="mb-3">Report a {{ kind }} item</h4>
+        <form method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">Item name</label>
+            <input type="text" name="title" class="form-control" maxlength="120"
+                   placeholder="e.g. Blue water bottle" value="{{ form.get('title', '') }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" rows="3" class="form-control"
+                      placeholder="Colour, brand, marks, stickers, anything unique">{{ form.get('description', '') }}</textarea>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Category</label>
+              <select name="category" class="form-select" required>
+                <option value="">Select...</option>
+                {% for c in categories %}
+                  <option value="{{ c }}" {% if form.get('category') == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Date {{ 'lost' if kind == 'lost' else 'found' }}</label>
+              <input type="date" name="date" class="form-control" max="{{ today }}"
+                     value="{{ form.get('date', today) }}" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input type="text" name="location" class="form-control" maxlength="100"
+                   placeholder="e.g. Library, Lab 2, Canteen" value="{{ form.get('location', '') }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Photo (PNG or JPG, max 5 MB)</label>
+            <input type="file" name="image" class="form-control" accept=".png,.jpg,.jpeg">
+            <div class="form-text">A clear photo gives much better automatic matching.</div>
+          </div>
+          <button class="btn btn-{{ 'danger' if kind == 'lost' else 'success' }} w-100">Submit report</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

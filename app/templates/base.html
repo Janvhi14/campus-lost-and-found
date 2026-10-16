@@ -10,19 +10,32 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
       <a class="navbar-brand" href="{{ url_for('main.home') }}">Lost &amp; Found</a>
-      <div class="ms-auto d-flex align-items-center gap-2">
-        {% if current_user.is_authenticated %}
-          <span class="text-white me-2">Hi, {{ current_user.name }}</span>
-          <a class="btn btn-outline-light btn-sm" href="{{ url_for('auth.logout') }}">Logout</a>
-        {% else %}
-          <a class="btn btn-outline-light btn-sm" href="{{ url_for('auth.login') }}">Login</a>
-          <a class="btn btn-light btn-sm" href="{{ url_for('auth.register') }}">Register</a>
-        {% endif %}
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('items.list_items') }}">Browse Items</a></li>
+          {% if current_user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('items.report', kind='lost') }}">Report Lost</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('items.report', kind='found') }}">Report Found</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('items.my_items') }}">My Reports</a></li>
+          {% endif %}
+        </ul>
+        <div class="d-flex align-items-center gap-2">
+          {% if current_user.is_authenticated %}
+            <span class="text-white me-2">Hi, {{ current_user.name }}</span>
+            <a class="btn btn-outline-light btn-sm" href="{{ url_for('auth.logout') }}">Logout</a>
+          {% else %}
+            <a class="btn btn-outline-light btn-sm" href="{{ url_for('auth.login') }}">Login</a>
+            <a class="btn btn-light btn-sm" href="{{ url_for('auth.register') }}">Register</a>
+          {% endif %}
+        </div>
       </div>
     </div>
   </nav>
 
-  <div class="container mt-4">
+  <div class="container mt-4 mb-5">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% for category, message in messages %}
         <div class="alert alert-{{ category }}">{{ message }}</div>
@@ -30,5 +43,7 @@
     {% endwith %}
     {% block content %}{% endblock %}
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

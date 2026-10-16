@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}My Reports{% endblock %}
+{% block content %}
+<h4 class="mb-3">My reports</h4>
+
+{% if items %}
+<div class="table-responsive">
+  <table class="table table-hover align-middle bg-white shadow-sm">
+    <thead class="table-light">
+      <tr><th>Type</th><th>Item</th><th>Category</th><th>Location</th><th>Date</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td><span class="badge bg-{{ 'danger' if item.kind == 'lost' else 'success' }}">{{ item.kind|upper }}</span></td>
+        <td>{{ item.title }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.location }}</td>
+        <td>{{ item.date.strftime('%d %b %Y') if item.date else '' }}</td>
+        <td>{{ item.status }}</td>
+        <td><a href="{{ url_for('items.item_detail', item_id=item.id) }}" class="btn btn-sm btn-outline-primary">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+  <div class="alert alert-info">
+    You have not reported anything yet.
+    <a href="{{ url_for('items.report', kind='lost') }}">Report a lost item</a> or
+    <a href="{{ url_for('items.report', kind='found') }}">report a found item</a>.
+  </div>
+{% endif %}
+{% endblock %}

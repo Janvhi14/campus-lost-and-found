@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Browse Items{% endblock %}
+{% block content %}
+<h4 class="mb-3">Browse items</h4>
+
+<form method="get" class="card card-body shadow-sm mb-4">
+  <div class="row g-2">
+    <div class="col-md-4">
+      <input type="text" name="q" class="form-control" placeholder="Search name, description, location"
+             value="{{ q }}">
+    </div>
+    <div class="col-md-3">
+      <select name="kind" class="form-select">
+        <option value="">Lost and found</option>
+        <option value="lost" {% if kind == 'lost' %}selected{% endif %}>Lost only</option>
+        <option value="found" {% if kind == 'found' %}selected{% endif %}>Found only</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="category" class="form-select">
+        <option value="">All categories</option>
+        {% for c in categories %}
+          <option value="{{ c }}" {% if category == c %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 d-grid">
+      <button class="btn btn-primary">Search</button>
+    </div>
+  </div>
+</form>
+
+{% if items %}
+<div class="row g-3">
+  {% for item in items %}
+  <div class="col-sm-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      {% if item.image_path %}
+        <img src="{{ url_for('static', filename='uploads/' ~ item.image_path) }}"
+             class="card-img-top" style="height:200px; object-fit:cover;" alt="{{ item.title }}">
+      {% else %}
+        <div class="bg-secondary-subtle d-flex align-items-center justify-content-center text-muted"
+             style="height:200px;">No photo</div>
+      {% endif %}
+      <div class="card-body">
+        <span class="badge bg-{{ 'danger' if item.kind == 'lost' else 'success' }}">{{ item.kind|upper }}</span>
+        <span class="badge bg-secondary">{{ item.category }}</span>
+        {% if item.status != 'open' %}
+          <span class="badge bg-dark">{{ item.status }}</span>
+        {% endif %}
+        <h6 class="card-title mt-2">{{ item.title }}</h6>
+        <p class="card-text small text-muted mb-0">
+          {{ item.location }} &middot; {{ item.date.strftime('%d %b %Y') if item.date else '' }}
+        </p>
+      </div>
+      <div class="card-footer bg-white border-0">
+        <a href="{{ url_for('items.item_detail', item_id=item.id) }}" class="btn btn-sm btn-outline-primary">View details</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+  <div class="alert alert-info">No items found.</div>
+{% endif %}
+{% endblock %}
